@@ -1,5 +1,5 @@
 import express, { Application, Request, Response } from "express";
-//const { authorizeSecret } = require('./auth.ts')
+const { authorizeSecret } = require('./auth.ts')
 
 const dotenv = require("dotenv");
 dotenv.config({ path: `${__dirname}/env-file.env` });
@@ -58,7 +58,7 @@ const parseInstances = (data: any) : EC2Instance[] => {
       }).flat();
 }
 app.use(express.json());
-//app.use(authorizeSecret(secret));
+app.use(authorizeSecret(secret));
 
 app.get("/", async (req: Request, res: Response) => {    
     res.send(await getInstances()); 

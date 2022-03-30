@@ -17,7 +17,7 @@ const express_1 = __importDefault(require("express"));
 const dotenv = require("dotenv");
 dotenv.config({ path: `${__dirname}/env-file.env` });
 const app = (0, express_1.default)();
-const port = 3000;
+const port = 8080;
 const PAGE_SIZE = 10;
 const { EC2Client, DescribeInstancesCommand } = require("@aws-sdk/client-ec2");
 const secret = process.env.SECRET;
@@ -62,7 +62,6 @@ app.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 app.post("/get", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { sort, page, region, running } = req.body;
     const instances = yield getInstances();
-    console.log(instances);
     const sortedInstances = sort ? instances.sort((a, b) => a[sort] > b[sort] ? 1 : -1) : instances;
     const paginatedInstances = page ? sortedInstances.slice((page - 1) * PAGE_SIZE, (page - 1) * PAGE_SIZE + PAGE_SIZE) : sortedInstances.slice(0, PAGE_SIZE);
     const regionInstance = region ? paginatedInstances.filter((a) => a.region.includes(region)) : paginatedInstances;
