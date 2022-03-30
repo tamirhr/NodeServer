@@ -59,13 +59,15 @@ app.use(express_1.default.json());
 app.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.send(yield getInstances());
 }));
-app.post('/get', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { sort, page } = req.body;
+app.post("/get", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { sort, page, region, running } = req.body;
     const instances = yield getInstances();
     console.log(instances);
     const sortedInstances = sort ? instances.sort((a, b) => a[sort] > b[sort] ? 1 : -1) : instances;
     const paginatedInstances = page ? sortedInstances.slice((page - 1) * PAGE_SIZE, (page - 1) * PAGE_SIZE + PAGE_SIZE) : sortedInstances.slice(0, PAGE_SIZE);
-    res.send(paginatedInstances);
+    const regionInstance = region ? paginatedInstances.filter((a) => a.region.includes(region)) : paginatedInstances;
+    const runningInstance = running ? paginatedInstances.filter((a) => a.state == "running") : regionInstance;
+    res.send(runningInstance);
 }));
 app.listen(port, () => {
     console.log(`Listening on port: ${port}`);
